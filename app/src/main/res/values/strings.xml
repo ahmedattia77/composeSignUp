@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">compose</string>
+    <string name="email_hint">Email</string>
+    <string name="salutation_hint">Salutation</string>
+    <string name="patient_hint">Patient</string>
+    <string name="state_hint">State</string>
+    <string name="city_hint">City</string>
+    <string name="area_hint">Area</string>
+</resources>
