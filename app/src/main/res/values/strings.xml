@@ -2,7 +2,7 @@
     <string name="app_name">compose</string>
     <string name="email_hint">Email</string>
     <string name="salutation_hint">Salutation</string>
-    <string name="patient_hint">Patient</string>
+    <string name="patient_hint">Patient Category</string>
     <string name="state_hint">State</string>
     <string name="city_hint">City</string>
     <string name="area_hint">Area</string>
@@ -10,4 +10,5 @@
     <string name="gender">Gender</string>
     <string name="date">Date of birth</string>
     <string name="password">Password</string>
+    <string name="name">Name</string>
 </resources>
