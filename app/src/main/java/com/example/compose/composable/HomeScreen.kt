@@ -118,7 +118,8 @@ fun signUp(navHostController: NavHostController){
         }
 
         Box (modifier = Modifier
-            .fillMaxSize().height(80.dp)
+            .fillMaxSize()
+            .height(80.dp)
             .background(
                 color = colorResource(id = R.color.pink),
             )
@@ -174,8 +175,9 @@ fun textField(hint:Int, type:KeyboardType ,icon: @Composable (() -> Unit)){
             .padding(bottom = 4.dp)
             .padding(horizontal = 25.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedLabelColor = Color.Magenta
-            , focusedBorderColor = Color.Gray
+            focusedLabelColor = colorResource(id = R.color.pink)
+            , focusedBorderColor = Color.Gray,
+            textColor = Color.Black
         ),
         shape = RoundedCornerShape(12.dp)
         )
@@ -216,7 +218,6 @@ fun signUpText (){
     Text(
         color = Color.Black,
         fontSize = 32.sp,
-//        fontFamily = Rubik,
         fontWeight = FontWeight.ExtraBold,
         text = "Sign Up",
         modifier = Modifier.padding(top = 4.dp)
