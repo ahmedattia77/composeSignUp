@@ -16,33 +16,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -62,22 +52,12 @@ fun signUp2(navHostController: NavHostController){
 
     val data = navHostController.previousBackStackEntry?.savedStateHandle?.get<SignUp>("signUp")
 
-
-    val phone = remember {
-        mutableStateOf("")
-    }
-
-    val gender = remember {
-        mutableStateOf("")
-    }
-    val dateOfBirth = remember {
-        mutableStateOf("")
-    }
     var password = remember {
         mutableStateOf("")
     }
 
     val state = rememberImeState()
+
     val scrollState = rememberScrollState()
 
     LaunchedEffect(key1 = state.value){
@@ -123,9 +103,9 @@ fun signUp2(navHostController: NavHostController){
             Text(text = "MR 10220032" , color = Color.Black , fontSize = 16.sp)
         }
 
-        textField(hint = R.string.phone,
+        val phone_ = textField(hint = R.string.phone,
             type = KeyboardType.Phone , leadingIcon = { Icon(painter = painterResource(id = R.drawable.phone) ,
-                contentDescription = null) },phone)
+                contentDescription = null) })
 
 
         val gender_ = dropDown(list = listOf("male" ,"female"),
@@ -134,26 +114,30 @@ fun signUp2(navHostController: NavHostController){
             leadingIcon = { Icon(painter = painterResource(id = R.drawable.gender)
                 , contentDescription = null )})
 
-        textField(hint = R.string.date,
+        val dateOfBirth_ =textField(hint = R.string.date,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.calendar) ,
-                contentDescription = null) },dateOfBirth)
+                contentDescription = null) })
 
-        passwordTextField(hint = R.string.password,
+        val password_ = passwordTextField(hint = R.string.password,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.password),
-                contentDescription = null) },password)
+                contentDescription = null) } ,password)
 
         Button(onClick = {
-                if (phone.value.isEmpty() || gender.value.isEmpty() ||
-                    dateOfBirth.value.isEmpty() || password.value.isEmpty())
+                if (phone_.isEmpty() || gender_.isEmpty() ||
+                    dateOfBirth_.isEmpty() || password_.isEmpty())
                     Toast.makeText(context , "make sure you've enter all Fields correct",
                         Toast.LENGTH_SHORT).show()
                 else{
-                    data?.phone = phone.value
-                    data?.gender = gender.value
-                    data?.dateOfBirth = dateOfBirth.value
-                    data?.password = password.value
+                    data?.phone = phone_
+                    data?.gender = gender_
+                    data?.dateOfBirth = dateOfBirth_
+                    data?.password = password_
                 }
-                Toast.makeText(context , password.value , Toast.LENGTH_SHORT).show()
+                Toast.makeText(context , "$password_ ," +
+                        "$phone_" +
+                        "$gender_" +
+                        "$dateOfBirth_" ,
+                    Toast.LENGTH_SHORT).show()
         },
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.pink)),
             modifier = Modifier
@@ -197,39 +181,4 @@ fun signUp2(navHostController: NavHostController){
             }
         }
     }
-}
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun textField2(hint:Int, type:KeyboardType ,icon: @Composable (() -> Unit) ,
-              textValue:MutableState<String>){
-
-    var expanded by  remember {mutableStateOf(false)}
-
-    var selectedIndex by remember {mutableStateOf("")}
-
-    var size by remember {mutableStateOf(Size.Zero)}
-
-    OutlinedTextField(
-        value = textValue.value,
-        onValueChange = {text ->
-            textValue.value = text
-        },
-        label = { Text(text = stringResource(id = hint)) },
-        leadingIcon = icon,
-        trailingIcon = icon,
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = type
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 4.dp)
-            .padding(horizontal = 25.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedLabelColor = colorResource(id = R.color.pink)
-            , focusedBorderColor = Color.Gray,
-            textColor = Color.Black
-        ),
-        shape = RoundedCornerShape(12.dp),
-        singleLine = true,
-    )
 }

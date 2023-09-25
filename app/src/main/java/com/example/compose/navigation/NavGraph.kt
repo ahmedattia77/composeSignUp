@@ -7,7 +7,6 @@ import androidx.navigation.compose.composable
 import com.example.compose.model.SignUp
 import com.example.compose.screen.signUp.signUp
 import com.example.compose.screen.signUp.signUp2
-import com.example.compose.viewmodel.RegistrationViewModel
 
 @Composable
 fun setUpNavGraph(

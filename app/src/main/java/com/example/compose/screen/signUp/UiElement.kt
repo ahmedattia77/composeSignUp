@@ -1,5 +1,6 @@
 package com.example.compose.screen.signUp
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -110,12 +111,17 @@ fun dropDown(list: List<String> ,hint:Int, type: KeyboardType, leadingIcon: @Com
 }
 
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun passwordTextField(hint:Int, type:KeyboardType ,
-                      leadingIcon: @Composable (() -> Unit),
-                      textValue: MutableState<String>
-){
+fun passwordTextField(
+    hint:Int,
+    type:KeyboardType,
+    leadingIcon: @Composable (() -> Unit),
+    textValue: MutableState<String>,
+
+    ) :String{
+
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     OutlinedTextField(
@@ -130,7 +136,6 @@ fun passwordTextField(hint:Int, type:KeyboardType ,
                 painterResource(id =R.drawable.visibility)
             else painterResource(id =R.drawable.visibility_off)
 
-            // Please provide localized description for accessibility services
             val description = if (passwordVisible) "Hide password" else "Show password"
 
             IconButton(onClick = {passwordVisible = !passwordVisible}){
@@ -154,16 +159,20 @@ fun passwordTextField(hint:Int, type:KeyboardType ,
         singleLine = true,
 
         )
-
+    return textValue.value
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun textField(hint:Int, type:KeyboardType ,
-              leadingIcon: @Composable (() -> Unit),
-              textValue:MutableState<String>
-){
+fun textField(
+    hint:Int, type:KeyboardType ,
+    leadingIcon: @Composable (() -> Unit)
+) : String{
+    val textValue = remember {
+        mutableStateOf("")
+    }
+
     OutlinedTextField(
         value = textValue.value,
         onValueChange = {text ->
@@ -186,7 +195,7 @@ fun textField(hint:Int, type:KeyboardType ,
         shape = RoundedCornerShape(12.dp),
         singleLine = true,
     )
-
+    return textValue.value
 }
 
 @Composable

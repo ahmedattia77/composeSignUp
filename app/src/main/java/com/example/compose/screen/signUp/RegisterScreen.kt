@@ -24,8 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,28 +44,6 @@ fun signUp(navHostController: NavHostController){
 
     val content = LocalContext.current
 
-    val fullName = remember {
-            mutableStateOf("")
-        }
-
-    val salutation = remember {
-            mutableStateOf("")
-        }
-
-    val patientCategory = remember {
-            mutableStateOf("")
-        }
-    val state = remember {
-            mutableStateOf("")
-        }
-
-    val city = remember {
-            mutableStateOf("")
-        }
-
-    val area = remember {
-            mutableStateOf("")
-        }
 
     val booleanState = rememberImeState()
     val scrollState = rememberScrollState()
@@ -107,45 +83,45 @@ fun signUp(navHostController: NavHostController){
         Spacer(modifier = Modifier.height(26.dp))
 
 
-        textField(hint = R.string.name,
+        val fullName_ = textField(hint = R.string.name,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.profile) ,
-                contentDescription = null) },fullName)
+                contentDescription = null) })
 
         val salutation_ = dropDown(list = listOf("salutation" , "salutation2" ,"salutation3")
             ,hint = R.string.salutation_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.medical) ,
-                contentDescription = null) })
+                contentDescription = null)})
 
         val patientCategory_ = dropDown(list = listOf("patientCategory" ,"patientCategory2" ,"patientCategory3"),
             hint = R.string.patient_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.medical),
-                contentDescription = null) })
+                contentDescription = null)})
 
         val state_ = dropDown(list = listOf("state1" , "state2" , "state3"),
             hint = R.string.state_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
-                contentDescription = null) })
+                contentDescription = null)})
 
-        textField(hint = R.string.city_hint,
+        val city_ = textField(hint = R.string.city_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
-                contentDescription = null) },city)
-        textField(hint = R.string.area_hint,
+                contentDescription = null)})
+        val area_ = textField(hint = R.string.area_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
-                contentDescription = null) },area)
+                contentDescription = null)})
 
         Button(onClick = {
-            if (fullName.value.isEmpty() || salutation.value.isEmpty() ||
-                patientCategory.value.isEmpty() || state.value.isEmpty() ||
-                city.value.isEmpty() || area.value.isEmpty())
-                Toast.makeText(content , "make sure you've enter all Fields " ,Toast.LENGTH_SHORT).show()
+            if (fullName_.isEmpty() || salutation_.isEmpty() ||
+                patientCategory_.isEmpty() || state_.isEmpty() ||
+                city_.isEmpty() || area_.isEmpty())
+                Toast.makeText(content ,"make sure you've enter all Fields " ,Toast.LENGTH_SHORT).show()
             else{
                 val signUp = SignUp(
-                    name = fullName.value,
-                    salutation = salutation.value,
-                    patientCategory = patientCategory.value,
-                    state = state.value ,
-                    city = city.value,
-                    area = area.value
+                    name = fullName_,
+                    salutation = salutation_,
+                    patientCategory = patientCategory_,
+                    state = state_,
+                    city = city_,
+                    area = area_
                 )
                 navHostController.currentBackStackEntry?.savedStateHandle?.set(
                     key = "signUp",
