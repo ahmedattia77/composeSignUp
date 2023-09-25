@@ -2,7 +2,6 @@ package com.example.compose.screen.signUp
 
 import android.widget.Toast
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,39 +13,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,6 +49,7 @@ fun signUp(navHostController: NavHostController){
     val fullName = remember {
             mutableStateOf("")
         }
+
     val salutation = remember {
             mutableStateOf("")
         }
@@ -71,7 +57,6 @@ fun signUp(navHostController: NavHostController){
     val patientCategory = remember {
             mutableStateOf("")
         }
-
     val state = remember {
             mutableStateOf("")
         }
@@ -100,7 +85,7 @@ fun signUp(navHostController: NavHostController){
             .verticalScroll(scrollState)
             .background(Color.White),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Bottom
     ) {
         logoImage()
         signUpText()
@@ -123,25 +108,29 @@ fun signUp(navHostController: NavHostController){
 
 
         textField(hint = R.string.name,
-            type = KeyboardType.Text ,icon = { Icon(painter = painterResource(id = R.drawable.profile) ,
-                contentDescription = null) } ,fullName)
+            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.profile) ,
+                contentDescription = null) },fullName)
 
-        textField(hint = R.string.salutation_hint,
-            type = KeyboardType.Text ,icon = { Icon(painter = painterResource(id = R.drawable.medical) ,
-                contentDescription = null) },salutation)
+        val salutation_ = dropDown(list = listOf("salutation" , "salutation2" ,"salutation3")
+            ,hint = R.string.salutation_hint,
+            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.medical) ,
+                contentDescription = null) })
 
-        textField(hint = R.string.patient_hint,
-            type = KeyboardType.Text , icon = { Icon(painter = painterResource(id = R.drawable.medical),
-                contentDescription = null) },patientCategory)
+        val patientCategory_ = dropDown(list = listOf("patientCategory" ,"patientCategory2" ,"patientCategory3"),
+            hint = R.string.patient_hint,
+            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.medical),
+                contentDescription = null) })
 
-        textField(hint = R.string.state_hint,
-            type = KeyboardType.Text , icon = { Icon(painter = painterResource(id = R.drawable.map),
-                contentDescription = null) },state)
+        val state_ = dropDown(list = listOf("state1" , "state2" , "state3"),
+            hint = R.string.state_hint,
+            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
+                contentDescription = null) })
+
         textField(hint = R.string.city_hint,
-            type = KeyboardType.Text , icon = { Icon(painter = painterResource(id = R.drawable.map),
+            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
                 contentDescription = null) },city)
         textField(hint = R.string.area_hint,
-            type = KeyboardType.Text , icon = { Icon(painter = painterResource(id = R.drawable.map),
+            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
                 contentDescription = null) },area)
 
         Button(onClick = {
@@ -202,85 +191,7 @@ fun signUp(navHostController: NavHostController){
                     fontSize = 16.sp,
                     color = Color.White
                 )
-
             }
         }
-
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun textField(hint:Int, type:KeyboardType ,icon: @Composable (() -> Unit) ,
-              textValue:MutableState<String>){
-
-    OutlinedTextField(
-        value = textValue.value,
-        onValueChange = {text ->
-            textValue.value = text
-        },
-        label = { Text(text = stringResource(id = hint)) },
-        leadingIcon = icon,
-        keyboardOptions = KeyboardOptions.Default.copy(
-        keyboardType = type
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 4.dp)
-            .padding(horizontal = 25.dp),
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedLabelColor = colorResource(id = R.color.pink)
-            , focusedBorderColor = Color.Gray,
-            textColor = Color.Black
-        ),
-        shape = RoundedCornerShape(12.dp),
-        singleLine = true,
-        )
-
-}
-
-@Composable
-fun logoImage (){
-    Image(
-        painter = painterResource(R.drawable.signup),
-        contentDescription = "",
-        modifier = Modifier
-            .padding(top = 52.dp)
-            .size(90.dp)
-    )
-}
-
-@Composable
-fun signUpText (){
-    Text(
-        color = Color.Black,
-        fontSize = 32.sp,
-        fontWeight = FontWeight.ExtraBold,
-        text = "Sign Up",
-        modifier = Modifier.padding(top = 4.dp)
-    )
-}
-
-@Composable
-fun welcomeAboardText (){
-    Text(
-        color = colorResource(id = R.color.smallText),
-        fontSize = 16.sp,
-        fontFamily = FontFamily.Monospace,
-        text = "Welcome Aboard",
-        modifier = Modifier.padding(4.dp)
-    )
-}
-
-@Composable
-fun linearProgressBar(progressValue :Float){
-    LinearProgressIndicator(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(4.dp)
-            .padding(horizontal = 24.dp),
-        progress = progressValue,
-        color = colorResource(id =R.color.pink ),
-        trackColor = colorResource(id =R.color.pink2)
-    )
 }

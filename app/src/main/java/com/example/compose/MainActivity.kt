@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
 
     lateinit var navController:NavHostController
     private val viewModel :RegistrationViewModel by viewModels()
-    @OptIn(ExperimentalMaterial3Api::class)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
