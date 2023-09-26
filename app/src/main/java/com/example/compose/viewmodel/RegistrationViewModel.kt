@@ -19,7 +19,7 @@ class RegistrationViewModel :ViewModel() {
 
     private val _registrationFlow: MutableStateFlow<ApiStatus<RegisterationResponse>>
             = MutableStateFlow(ApiStatus.Empty)
-    val movieStateFlow: StateFlow<ApiStatus<RegisterationResponse>> = _registrationFlow
+    val registrationFlow: StateFlow<ApiStatus<RegisterationResponse>> = _registrationFlow
 
     private var _registration = MutableLiveData<RegisterationResponse>()
     val registration = _registration
@@ -29,7 +29,7 @@ class RegistrationViewModel :ViewModel() {
 
 
     init {
-        getRegistrationData()
+//        getRegistrationData()
         getRegistrationDataFlow()
     }
 

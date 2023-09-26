@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenuItem
@@ -51,12 +52,13 @@ fun dropDown(list: List<String> ,hint:Int, type: KeyboardType, leadingIcon: @Com
     var selectedOptionText by remember { mutableStateOf("") }
 
 
-    Column (verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()){
+//    Column (verticalArrangement = Arrangement.Center,
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        modifier = Modifier
+//            .fillMaxWidth()){
 
-        Box(modifier = Modifier.padding(horizontal = 25.dp)) {
+        Box(modifier = Modifier.fillMaxWidth()
+            .padding(horizontal = 25.dp)) {
 
             ExposedDropdownMenuBox(
                 expanded = expanded,
@@ -66,8 +68,8 @@ fun dropDown(list: List<String> ,hint:Int, type: KeyboardType, leadingIcon: @Com
             ) {
                 OutlinedTextField(
                     modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .menuAnchor(),
                     readOnly = true,
                     value = selectedOptionText,
                     onValueChange = { },
@@ -93,7 +95,9 @@ fun dropDown(list: List<String> ,hint:Int, type: KeyboardType, leadingIcon: @Com
                     expanded = expanded,
                     onDismissRequest = {
                         expanded = false
-                    }, modifier = Modifier.background(color = Color.White)
+                    }, modifier = Modifier
+                        .background(color = Color.White)
+                        .fillMaxWidth()
                 ) {
                     options.forEach { selectionOption ->
                         DropdownMenuItem(
@@ -106,7 +110,7 @@ fun dropDown(list: List<String> ,hint:Int, type: KeyboardType, leadingIcon: @Com
                 }
             }
         }
-    }
+//    }
     return selectedOptionText
 }
 
@@ -123,6 +127,7 @@ fun passwordTextField(
     ) :String{
 
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
 
     OutlinedTextField(
         value = textValue.value,

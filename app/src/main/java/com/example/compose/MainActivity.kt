@@ -26,8 +26,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeTheme{
-                val viewModel = viewModel<RegistrationViewModel>()
-                val reData by viewModel.movieStateFlow.collectAsState()
                 navController = rememberNavController()
                 setUpNavGraph(navHostController = navController)
             }
