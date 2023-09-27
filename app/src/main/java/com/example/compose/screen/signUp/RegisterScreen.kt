@@ -23,27 +23,97 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavHostController
 import com.example.compose.R
+import com.example.compose.data.model.registeration.RegisterationResponse
 import com.example.compose.model.SignUp
 import com.example.compose.navigation.Screen
+import com.example.compose.utils.ApiStatus
 import com.example.compose.utils.rememberImeState
+import com.example.compose.viewmodel.RegistrationViewModel
 
 @Composable
-fun signUp(navHostController: NavHostController){
+fun PerformOnLifeCycle(
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    onStart : () -> Unit = {},
+    onResume : () -> Unit = {})
+{
+    DisposableEffect(lifecycleOwner) {
 
-    val content = LocalContext.current
+        val observer = LifecycleEventObserver { _, event ->
+            when(event){
+                Lifecycle.Event.ON_CREATE -> onStart
+                Lifecycle.Event.ON_RESUME -> onResume
+                else -> {}
+            }
+        }
 
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        return@DisposableEffect onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+}
+
+@Composable
+fun signUp(navHostController: NavHostController ,
+           lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current)
+{
+
+    val context = LocalContext.current
+    var statusList : List<String>? = null
+    var salutationList : List<String>? = null
+    var patientCategoryList : List<String>? = null
+    var cityList : List<String>? = null
+    var areaList : List<String>? = null
+
+    val viewModel: RegistrationViewModel = hiltViewModel()
+    val response = viewModel.registrationFlow.collectAsState()
+
+    when(response.value){
+        is  ApiStatus.Loading -> {
+
+        }
+        is ApiStatus.Success -> {
+            statusList = (response.value as ApiStatus.Success<RegisterationResponse>).data.data[0]
+                .allStates.map { index ->
+                index.state_name
+            }
+            cityList = (response.value as ApiStatus.Success<RegisterationResponse>).data.data[0]
+                .allCities.map {index ->
+                index.city_name
+            }
+            patientCategoryList = (response.value as ApiStatus.Success<RegisterationResponse>).data.data[0]
+                .allPatientCategories.map { index ->
+                index.category_name
+            }
+        }
+        is ApiStatus.Failure -> {
+            val errorMsg = (response.value as ApiStatus.Failure).msg.toString()
+            Toast.makeText(context , errorMsg , Toast.LENGTH_SHORT).show()
+        }
+        is ApiStatus.Empty -> {
+
+        }
+    }
 
     val booleanState = rememberImeState()
     val scrollState = rememberScrollState()
@@ -87,39 +157,42 @@ fun signUp(navHostController: NavHostController){
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.profile) ,
                 contentDescription = null) })
 
-        val salutation_ = dropDown(list = listOf("salutation" , "salutation2" ,"salutation3")
+        val salutation_ = dropDown(list = salutationList
             ,hint = R.string.salutation_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.medical) ,
                 contentDescription = null)})
 
-        val patientCategory_ = dropDown(list = listOf("patientCategory" ,"patientCategory2" ,"patientCategory3"),
+        val patientCategory_ = dropDown(list = patientCategoryList,
             hint = R.string.patient_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.medical),
                 contentDescription = null)})
 
-        val state_ = dropDown(list = listOf("state1" , "state2" , "state3"),
+
+        val state_ = dropDown(list = statusList,
             hint = R.string.state_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
                 contentDescription = null)})
 
-        val city_ = textField(hint = R.string.city_hint,
+        val city_ = dropDown(list = cityList ,hint = R.string.city_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
                 contentDescription = null)})
+
         val area_ = textField(hint = R.string.area_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
                 contentDescription = null)})
 
         Button(onClick = {
             if (fullName_.isEmpty() || salutation_.isEmpty() ||
-                patientCategory_.isEmpty() || state_.isEmpty() ||
-                city_.isEmpty() || area_.isEmpty())
-                Toast.makeText(content ,"make sure you've enter all Fields " ,Toast.LENGTH_SHORT).show()
+                patientCategory_.isEmpty() || state_.isNullOrEmpty() ||
+                city_.isEmpty() || area_.isEmpty()){
+                Toast.makeText(context ,"make sure you've enter all Fields " ,Toast.LENGTH_SHORT).show()
+            }
             else{
                 val signUp = SignUp(
                     name = fullName_,
                     salutation = salutation_,
                     patientCategory = patientCategory_,
-                    state = state_,
+                    state = state_ !!,
                     city = city_,
                     area = area_
                 )

@@ -3,14 +3,11 @@ package com.example.compose.screen.signUp
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DropdownMenuItem
@@ -46,16 +43,17 @@ import com.example.compose.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun dropDown(list: List<String> ,hint:Int, type: KeyboardType, leadingIcon: @Composable (() -> Unit)) : String {
-    val options = list
+fun dropDown(list: List<String>? = null, hint:Int, type: KeyboardType, leadingIcon: @Composable (() -> Unit)) : String {
+    var options = listOf("empty")
+
+    if (list == null)
+        options = listOf("empty")
+    else
+         options = list
+
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf("") }
 
-
-//    Column (verticalArrangement = Arrangement.Center,
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        modifier = Modifier
-//            .fillMaxWidth()){
 
         Box(modifier = Modifier.fillMaxWidth()
             .padding(horizontal = 25.dp)) {
@@ -99,7 +97,7 @@ fun dropDown(list: List<String> ,hint:Int, type: KeyboardType, leadingIcon: @Com
                         .background(color = Color.White)
                         .fillMaxWidth()
                 ) {
-                    options.forEach { selectionOption ->
+                    options?.forEach { selectionOption ->
                         DropdownMenuItem(
                             text = { Text(text = selectionOption) },
                             onClick = {
@@ -110,7 +108,6 @@ fun dropDown(list: List<String> ,hint:Int, type: KeyboardType, leadingIcon: @Com
                 }
             }
         }
-//    }
     return selectedOptionText
 }
 

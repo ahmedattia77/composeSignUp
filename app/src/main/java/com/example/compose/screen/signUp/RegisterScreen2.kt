@@ -21,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,8 +40,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -51,36 +54,23 @@ import com.example.compose.model.SignUp
 import com.example.compose.utils.ApiStatus
 import com.example.compose.utils.rememberImeState
 import com.example.compose.viewmodel.RegistrationViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun signUp2(navHostController: NavHostController){
+fun signUp2(
+    navHostController: NavHostController,
+
+){
 
     val context = LocalContext.current
 
-    val viewModel = viewModel<RegistrationViewModel>()
-    val response by viewModel.registrationFlow.collectAsStateWithLifecycle()
 
+    val viewModel:RegistrationViewModel = hiltViewModel()
 
-    when(response){
-        is ApiStatus.Loading -> {
-
-        }
-
-        is ApiStatus.Success -> {
-
-        }
-
-        is ApiStatus.Failure -> {
-
-        }
-
-        is ApiStatus.Empty -> {
-
-        }
-    }
+    val response = viewModel.registrationFlow.collectAsState()
 
     val data = navHostController.previousBackStackEntry?.savedStateHandle?.get<SignUp>("signUp")
 

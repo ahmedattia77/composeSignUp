@@ -13,7 +13,7 @@ fun setUpNavGraph(
     navHostController: NavHostController
 ){
     NavHost(navController = navHostController,
-        startDestination = Screen.SignUp2.route
+        startDestination = Screen.SignUp.route
     ){
         composable(route = Screen.SignUp.route){
             signUp(navHostController)

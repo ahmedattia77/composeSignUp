@@ -16,7 +16,9 @@ import com.example.compose.navigation.setUpNavGraph
 import com.example.compose.screen.signUp.dropDown
 import com.example.compose.ui.theme.ComposeTheme
 import com.example.compose.viewmodel.RegistrationViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint()
 class MainActivity : ComponentActivity() {
 
     lateinit var navController:NavHostController
