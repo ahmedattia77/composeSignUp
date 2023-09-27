@@ -22,10 +22,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,17 +52,15 @@ import com.example.compose.utils.rememberImeState
 import com.example.compose.viewmodel.RegistrationViewModel
 
 @Composable
-fun PerformOnLifeCycle(
+fun performOnLifeCycle(
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
-    onStart : () -> Unit = {},
-    onResume : () -> Unit = {})
+    onCreate : () -> Unit = {})
 {
     DisposableEffect(lifecycleOwner) {
 
         val observer = LifecycleEventObserver { _, event ->
             when(event){
-                Lifecycle.Event.ON_CREATE -> onStart
-                Lifecycle.Event.ON_RESUME -> onResume
+                Lifecycle.Event.ON_START -> onCreate
                 else -> {}
             }
         }
@@ -77,16 +77,29 @@ fun PerformOnLifeCycle(
 fun signUp(navHostController: NavHostController ,
            lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current)
 {
-
     val context = LocalContext.current
+
+    var area_ :String? = null
+    var city_ :String ? = null
+    var patientCategory_ :String? = null
+    var status_ :String? = null
+    var name_ :String? = null
+    var salutation_:String? = null
+    var address_:String? = null
+
     var statusList : List<String>? = null
     var salutationList : List<String>? = null
     var patientCategoryList : List<String>? = null
     var cityList : List<String>? = null
-    var areaList : List<String>? = null
 
     val viewModel: RegistrationViewModel = hiltViewModel()
     val response = viewModel.registrationFlow.collectAsState()
+
+    performOnLifeCycle(
+        lifecycleOwner = lifecycleOwner,
+        onCreate = {
+            Toast.makeText(context , "eny" ,Toast.LENGTH_SHORT).show()
+        })
 
     when(response.value){
         is  ApiStatus.Loading -> {
@@ -104,6 +117,10 @@ fun signUp(navHostController: NavHostController ,
             patientCategoryList = (response.value as ApiStatus.Success<RegisterationResponse>).data.data[0]
                 .allPatientCategories.map { index ->
                 index.category_name
+            }
+            salutationList = (response.value as ApiStatus.Success<RegisterationResponse>).data.data[0]
+                .allSalutations.map { index ->
+                index.salutation
             }
         }
         is ApiStatus.Failure -> {
@@ -152,49 +169,84 @@ fun signUp(navHostController: NavHostController ,
 
         Spacer(modifier = Modifier.height(26.dp))
 
+        Column(horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(400.dp)
+                .verticalScroll(rememberScrollState())) {
 
-        val fullName_ = textField(hint = R.string.name,
-            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.profile) ,
-                contentDescription = null) })
+                name_ = textField(hint = R.string.name,
+                type = KeyboardType.Text, leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.profile),
+                        contentDescription = null
+                    )
+                })
 
-        val salutation_ = dropDown(list = salutationList
-            ,hint = R.string.salutation_hint,
-            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.medical) ,
-                contentDescription = null)})
+                salutation_ = dropDown(list = salutationList, hint = R.string.salutation_hint,
+                type = KeyboardType.Text, leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.medical),
+                        contentDescription = null
+                    )
+                })
 
-        val patientCategory_ = dropDown(list = patientCategoryList,
-            hint = R.string.patient_hint,
-            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.medical),
-                contentDescription = null)})
+                patientCategory_ = dropDown(list = patientCategoryList,
+                hint = R.string.patient_hint,
+                type = KeyboardType.Text, leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.medical),
+                        contentDescription = null
+                    )
+                })
 
 
-        val state_ = dropDown(list = statusList,
-            hint = R.string.state_hint,
+                status_ = dropDown(list = statusList,
+                hint = R.string.state_hint,
+                type = KeyboardType.Text, leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.map),
+                        contentDescription = null
+                    )
+                })
+
+                city_ = dropDown(list = cityList, hint = R.string.city_hint,
+                type = KeyboardType.Text, leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.map),
+                        contentDescription = null
+                    )
+                })
+
+                 area_ = textField(hint = R.string.area_hint,
+                type = KeyboardType.Text, leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.map),
+                        contentDescription = null
+                    )
+                })
+
+                address_ = textField(hint = R.string.address_hint,
             type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
                 contentDescription = null)})
-
-        val city_ = dropDown(list = cityList ,hint = R.string.city_hint,
-            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
-                contentDescription = null)})
-
-        val area_ = textField(hint = R.string.area_hint,
-            type = KeyboardType.Text , leadingIcon = { Icon(painter = painterResource(id = R.drawable.map),
-                contentDescription = null)})
+        }
 
         Button(onClick = {
-            if (fullName_.isEmpty() || salutation_.isEmpty() ||
-                patientCategory_.isEmpty() || state_.isNullOrEmpty() ||
-                city_.isEmpty() || area_.isEmpty()){
+            if (name_.isNullOrEmpty() || salutation_.isNullOrEmpty() ||
+                patientCategory_.isNullOrEmpty() || status_.isNullOrEmpty() ||
+                city_.isNullOrEmpty() || area_.isNullOrEmpty() || address_.isNullOrEmpty()){
                 Toast.makeText(context ,"make sure you've enter all Fields " ,Toast.LENGTH_SHORT).show()
             }
             else{
                 val signUp = SignUp(
-                    name = fullName_,
-                    salutation = salutation_,
-                    patientCategory = patientCategory_,
-                    state = state_ !!,
-                    city = city_,
-                    area = area_
+                    name = name_ !!,
+                    salutation = salutation_!!,
+                    patientCategory = patientCategory_!!,
+                    state = status_ !!,
+                    city = city_ !!,
+                    area = area_ !!,
+                    address = address_ !!
                 )
                 navHostController.currentBackStackEntry?.savedStateHandle?.set(
                     key = "signUp",

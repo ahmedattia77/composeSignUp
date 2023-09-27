@@ -11,6 +11,7 @@ class SignUp(
     val state:String,
     val city:String,
     val area:String,
+    var address:String,
     var phone:String?=null,
     var gender:String?= null,
     var dateOfBirth:String?=null,

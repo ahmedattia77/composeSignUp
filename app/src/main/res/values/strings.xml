@@ -6,6 +6,7 @@
     <string name="state_hint">State</string>
     <string name="city_hint">City</string>
     <string name="area_hint">Area</string>
+    <string name="address_hint">Address</string>
     <string name="phone">Phone</string>
     <string name="gender">Gender</string>
     <string name="date">Date of birth</string>
