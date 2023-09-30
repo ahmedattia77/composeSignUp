@@ -120,7 +120,7 @@ fun signUp2(
                 .padding(horizontal = 25.dp)
                 .padding(vertical = 16.dp) ,
             horizontalArrangement = Arrangement.SpaceBetween){
-            Text(text = "Mr number" , color = Color.Black , fontSize = 18.sp ,
+            Text(text = "MR ${data?.name}" , color = Color.Black , fontSize = 18.sp ,
                 fontWeight = FontWeight.ExtraBold)
             Text(text = "MR 10220032" , color = Color.Black , fontSize = 16.sp)
         }

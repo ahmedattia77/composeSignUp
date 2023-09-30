@@ -4,9 +4,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.compose.data.model.ApplicationResponse
+import com.example.compose.data.model.registeration.Data
 import com.example.compose.data.model.registeration.RegisterationResponse
 import com.example.compose.data.remot.ApiServiceImp
-import com.example.compose.repository.RegistrationRepo
 import com.example.compose.utils.ApiStatus
 import com.example.compose.utils.getError
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,18 +29,7 @@ class  RegistrationViewModel @Inject constructor(
             = MutableStateFlow(ApiStatus.Empty)
     val registrationFlow: StateFlow<ApiStatus<RegisterationResponse>> = _registrationFlow
 
-    var state = mutableStateOf<RegisterationResponse?>(null)
-        private set
-
-    private var _registration = MutableLiveData<RegisterationResponse>()
-    val registration = _registration
-
-    private var _errorRegistration = MutableLiveData<String>()
-    val errorRegistration = _registration
-
-
     init {
-//        getRegistrationData()
         getSignUpDataFlow()
     }
 
@@ -60,26 +50,4 @@ class  RegistrationViewModel @Inject constructor(
         }
     }
 
-
-    fun getRegistrationData (){
-        viewModelScope.launch {
-            try {
-                val res = RegistrationRepo().getRegistrationData()
-                if (res.isSuccessful){
-                    _registration.postValue(res.body())
-                }
-                else
-                    _errorRegistration.postValue(res.errorBody()?.getError().toString())
-            }catch (e : IOException){
-                e.printStackTrace()
-                _errorRegistration.postValue(e.message.toString())
-            } catch (e: HttpException) {
-                e.printStackTrace()
-                _errorRegistration.postValue(e.response()?.errorBody()?.getError().toString())
-            } catch (e: Exception) {
-                e.printStackTrace()
-                _errorRegistration.postValue(e.message.toString())
-            }
-        }
-    }
 }

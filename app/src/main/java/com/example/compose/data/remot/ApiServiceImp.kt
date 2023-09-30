@@ -1,5 +1,7 @@
 package com.example.compose.data.remot
 
+import com.example.compose.data.model.ApplicationResponse
+import com.example.compose.data.model.registeration.Data
 import com.example.compose.data.model.registeration.RegisterationResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -14,5 +16,4 @@ class ApiServiceImp @Inject constructor(private val apiService: ApiService) {
             emit(response !!)
         }.flowOn(Dispatchers.IO)
     }
-
 }
